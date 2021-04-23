@@ -1,5 +1,6 @@
 class PhotosController < ApplicationController
   before_action :set_photo, only: %i[ show edit update destroy ]
+  before_action :check_user_is_photo_owner, only: %i[ edit update destroy ]
 
   # GET /photos or /photos.json
   def index
@@ -61,6 +62,12 @@ class PhotosController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_photo
       @photo = Photo.find(params[:id])
+    end
+
+    def check_user_is_photo_owner
+      if current_user != @photo.owner
+        redirect_back fallback_location: root_path, alert: "You don't have permission to do that. Naughty"
+      end
     end
 
     # Only allow a list of trusted parameters through.

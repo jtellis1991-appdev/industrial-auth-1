@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   before_action :set_user, only: %i[ show liked feed followers following discover ]
+  before_action :no_stalking, only: %i[ feed discover ]
 
   private
 
@@ -10,4 +11,11 @@ class UsersController < ApplicationController
         @user = current_user
       end
     end
+
+    def no_stalking
+      if current_user.username != @user.username
+        redirect_back fallback_location: root_url, alert: "Unauthorized access. Don't be nosy!" 
+      end
+    end
+
 end

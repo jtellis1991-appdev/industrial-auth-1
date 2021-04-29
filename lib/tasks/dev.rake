@@ -35,7 +35,7 @@ task sample_data: :environment do
       ),
       website: Faker::Internet.url,
       private: [true, false].sample,
-      avatar_image: "https://robohash.org/#{username}"
+      avatar_image: "https://robohash.org/#{username}?set=set4"
     )
 
     p user.errors.full_messages
@@ -79,9 +79,18 @@ task sample_data: :environment do
           photo.fans << follower
         end
 
-        if rand < 0.25
+        if rand < 0.15
           comment = photo.comments.create(
             body: Faker::Quote.jack_handey,
+            author: follower
+          )
+
+          p comment.errors.full_messages
+        end
+
+        if rand < 0.10
+          comment = photo.comments.create(
+            body: Faker::Quote.robin,
             author: follower
           )
 
